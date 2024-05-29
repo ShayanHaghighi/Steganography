@@ -70,7 +70,8 @@ void encrypt(unsigned char* img,char* message,size_t imgSize, uint8_t* hash){
             srand(hash[(i+j*8)%SIZE_OF_SHA_256_HASH]);
             randomIndex = (rand()*randomIndex)%imgSize;
             while(is_in_arr(usedIndexes,randomIndex,length*8)){
-                randomIndex = (++randomIndex)%imgSize;
+                randomIndex++;
+                randomIndex = randomIndex%imgSize;
             }
 
             usedIndexes[indiciesPtr] = randomIndex;
@@ -106,7 +107,8 @@ void decrypt(unsigned char* img,char* output,size_t imgSize, uint8_t* hash){
             srand(hash[((7-i)+(j*8))%SIZE_OF_SHA_256_HASH]);
             randomIndex = (rand()*randomIndex)%imgSize;
             while(is_in_arr(usedIndicies,randomIndex,indiciesPtr)){
-                randomIndex = ++randomIndex%imgSize;
+                randomIndex++;
+                randomIndex = randomIndex%imgSize;
             }
             usedIndicies[indiciesPtr] = randomIndex;
             indiciesPtr++;
@@ -151,15 +153,16 @@ void hex_to_int(uint8_t* dest, char* values, size_t val_len){
 }
 
 void print_usage(){
-    printf("Usage: ./steg -e -f [image] [OPTIONS]... [message]\n");
+    printf("\nUSAGE:\n\n./<executable-name> -e -f <image_path> [-k <key>] [-p <password>] message\n");
     printf("or\n");
-    printf("Usage: ./steg -d -f [image] [OPTIONS]...\n");
+    printf("./<executable-name> -d -f <image_path> [-k <key>] [-p <password>]\n");
+    printf("\nCOMMANDS:\n\n");
     printf("  -e                         hide the provided message into the provided image\n");
     printf("  -d                         decrypt the message from the provided image\n");
     printf("  -f [file]                  use this file to hide/decrypt \n");
     printf("  -p [password]              use this password to hide/decrypt \n");
     printf("  -k [key]                   use this key to hide/decrypt \n");
-    printf("  -i [imageName]             hide message in preselected image\n");
+    // printf("  -i [imageName]             hide message in preselected image\n");
 }
 
 char* create_file_path(char* filepath){
